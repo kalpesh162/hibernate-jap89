@@ -1,37 +1,34 @@
 package com.app;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import com.entity.Employee;
 
-public class App {
+public class ReadData {
+
 	public static void main(String[] args) {
-
 		Configuration configuration = new Configuration();
-
 		configuration.configure("hibernate.cfg.xml");
 
 		SessionFactory factory = configuration.buildSessionFactory();
 
 		Session session = factory.openSession();
 
-		Employee employee = new Employee();
-		employee.setName("Kareena");
-		employee.setSalary(343434);
+		// from Employee e
+		Query query = session.createQuery("from Employee e");
 
-		session.save(employee);
+		List<Employee> list = query.list();
 
-		Transaction tx = session.beginTransaction();
+		for (Employee employee : list)
+			System.out.println(employee);
 
-		tx.commit();
-
-		session.close();
 		factory.close();
 
-		System.out.print("Thank YOU");
-
 	}
+
 }
