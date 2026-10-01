@@ -1,5 +1,7 @@
 package com.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,6 +28,38 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 		}
 
+	}
+
+	@Override
+	public Employee getEmployeeById(int id) {
+		Employee employee = null;
+
+		SessionFactory factory = HibernateUtility.getSessionFactory();
+
+		try (Session session = factory.openSession()) {
+
+			employee = session.get(Employee.class, id);
+
+		} catch (Exception e) {
+
+		}
+		return employee;
+	}
+
+	@Override
+	public List<Employee> getAllEmployees() {
+		List<Employee> list = null;
+
+		SessionFactory factory = HibernateUtility.getSessionFactory();
+
+		try (Session session = factory.openSession()) {
+
+			list = session.createQuery("from Employee e").getResultList();
+
+		} catch (Exception e) {
+
+		}
+		return list;
 	}
 
 }
