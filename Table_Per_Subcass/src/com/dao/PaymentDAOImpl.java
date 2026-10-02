@@ -1,5 +1,7 @@
 package com.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -136,6 +138,33 @@ public class PaymentDAOImpl implements PaymentDAO {
 		}
 
 		return cheque;
+	}
+
+	@Override
+	public List<Object[]> getAllTransactions() {
+		List<Object[]> list = null;
+     /*
+		String hql = "SELECT p.payId , p.date , p.amount  , cc.ccNo  , cc.ccType , ch.chNo  , ch.chType "
+				+ "FROM Payment p " + "INNER JOIN Cheque ch " + "INNER JOIN CreditCard cc " + " ON  p.payId==cc.payId "
+				+ " and p.payId==ch.payId ";
+		*/
+		String hql1 = "SELECT p.payId, p.date, p.amount, cc.ccNo, cc.ccType, ch.chNo, ch.chType "
+		           + "FROM Payment p " 
+		           + "LEFT JOIN Cheque ch ON p.payId = ch.payId " 
+		           + "LEFT JOIN CreditCard cc ON p.payId = cc.payId";
+
+		SessionFactory factory = HibernateUtility.getSessionFactory();
+
+		try (Session session = factory.openSession()) {
+			list = session.createQuery(hql1).getResultList();
+
+		} catch (Exception e) {
+
+			throw e;
+		}
+
+		return list;
+
 	}
 
 }
